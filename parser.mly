@@ -13,10 +13,10 @@
 %token PRED
 %token ISZERO
 %token LET
+%token LETREC
 %token IN
 %token BOOL
 %token NAT
-%token LETREC
 
 %token LPAREN
 %token RPAREN

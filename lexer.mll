@@ -17,6 +17,7 @@ rule token = parse
   | "pred"      { PRED }
   | "iszero"    { ISZERO }
   | "let"       { LET }
+  | "letrec"    { LETREC }
   | "in"        { IN }
   | "Bool"      { BOOL }
   | "Nat"       { NAT }
@@ -29,7 +30,5 @@ rule token = parse
   | ['0'-'9']+  { INTV (int_of_string (Lexing.lexeme lexbuf)) }
   | ['a'-'z']['a'-'z' '_' '0'-'9']*
                 { IDV (Lexing.lexeme lexbuf) }
-  | "letrec" { LETREC }
   | eof         { EOF }
   | _           { raise Lexical_error }
-

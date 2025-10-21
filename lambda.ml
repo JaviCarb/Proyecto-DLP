@@ -162,6 +162,8 @@ let rec string_of_term = function
       "(" ^ string_of_term t1 ^ " " ^ string_of_term t2 ^ ")"
   | TmLetIn (s, t1, t2) ->
       "let " ^ s ^ " = " ^ string_of_term t1 ^ " in " ^ string_of_term t2
+  | TmFix t ->
+      "(fix " ^ string_of_term t ^ ")"
 ;;
 
 let rec ldif l1 l2 = match l1 with
