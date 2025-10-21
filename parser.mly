@@ -48,7 +48,7 @@ term :
   | LET IDV EQ term IN term
       { TmLetIn ($2, $4, $6) }
   | LETREC IDV COLON ty EQ term IN term
-      { TmLetIn ($2, TmFix (TmAbs ($2, $4, $6), $8)) }
+      { TmLetIn ($2, TmFix (TmAbs ($2, $4, $6)), $8) }
 
 appTerm :
     atomicTerm

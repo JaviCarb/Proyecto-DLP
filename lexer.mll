@@ -28,8 +28,8 @@ rule token = parse
   | "->"        { ARROW }
   | ['0'-'9']+  { INTV (int_of_string (Lexing.lexeme lexbuf)) }
   | ['a'-'z']['a'-'z' '_' '0'-'9']*
-  | "letrec" { LETREC }
                 { IDV (Lexing.lexeme lexbuf) }
+  | "letrec" { LETREC }
   | eof         { EOF }
   | _           { raise Lexical_error }
 

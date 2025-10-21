@@ -119,6 +119,15 @@ let rec typeof ctx tm = match tm with
       let tyT1 = typeof ctx t1 in
       let ctx' = addbinding ctx x tyT1 in
       typeof ctx' t2
+
+    (* T-Fix *)
+  | TmFix t1 ->
+      let tyT1 = typeof ctx t1 in
+      (match tyT1 with
+           TyArr (tyT11, tyT12) ->
+             if tyT11 = tyT12 then tyT12
+             else raise (Type_error "result of body not compatible with domain")
+         | _ -> raise (Type_error "arrow type expected"))
 ;;
 
 
@@ -188,6 +197,8 @@ let rec free_vars tm = match tm with
       lunion (free_vars t1) (free_vars t2)
   | TmLetIn (s, t1, t2) ->
       lunion (ldif (free_vars t2) [s]) (free_vars t1)
+  | TmFix t1 ->
+      free_vars t1
 ;;
 
 let rec fresh_name x l =
@@ -227,6 +238,8 @@ let rec subst x s tm = match tm with
            then TmLetIn (y, subst x s t1, subst x s t2)
            else let z = fresh_name y (free_vars t2 @ fvs) in
                 TmLetIn (z, subst x s t1, subst x s (subst y (TmVar z) t2))
+  | TmFix t ->
+      TmFix (subst x s t)
 ;;
 
 let rec isnumericval tm = match tm with
@@ -313,6 +326,15 @@ let rec eval1 tm = match tm with
   | TmLetIn(x, t1, t2) ->
       let t1' = eval1 t1 in
       TmLetIn (x, t1', t2)
+
+    (* E-FixBeta *)
+  | TmFix (TmAbs (x, _, t2)) ->
+      subst x tm t2  (* tm es un atajo para referenciar toda la parte izquierda de la regla *)
+    
+    (* E-Fix *)
+  | TmFix t1 ->
+      let t1' = eval1 t1 in
+      TmFix t1'
 
   | _ ->
       raise NoRuleApplies
